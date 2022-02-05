@@ -31,7 +31,7 @@ class TranslatableEntity extends EntityContentBase {
   /**
    * {@inheritdoc}
    */
-  public function updateEntity(EntityInterface $entity, Row $row) {
+  public function updateEntity(EntityInterface $entity, Row $row) : EntityInterface {
     $entity = parent::updateEntity($entity, $row);
     // Always delete on rollback, even if it's "default" translation.
     $this->setRollbackAction($row->getIdMap(), MigrateIdMapInterface::ROLLBACK_DELETE);
@@ -42,7 +42,7 @@ class TranslatableEntity extends EntityContentBase {
   /**
    * {@inheritdoc}
    */
-  protected function getEntity(Row $row, array $old_destination_id_values) {
+  protected function getEntity(Row $row, array $old_destination_id_values) : EntityInterface {
     if (!$langcode = $row->getSourceProperty('language')) {
       throw new MigrateException('Missing "language" source property.');
     }
@@ -78,7 +78,7 @@ class TranslatableEntity extends EntityContentBase {
   /**
    * {@inheritdoc}
    */
-  public function getIds() {
+  public function getIds() : array {
     return [
       $this->getKey('id') => ['type' => 'string'],
     ];
