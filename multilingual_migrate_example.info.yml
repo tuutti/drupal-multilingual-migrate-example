@@ -1,0 +1,6 @@
+name: Multilingual migrate example
+type: module
+package: Custom
+core_version_requirement: ^8 || ^9
+dependencies:
+  - drupal:migrate

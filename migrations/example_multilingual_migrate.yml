@@ -1,0 +1,12 @@
+langcode: en
+status: true
+id: example_multilingual_migrate
+label: 'Example multilingual migrate'
+source:
+  plugin: example_multilingual_source
+  track_changes: true
+process:
+  id: id
+  label: name
+destination:
+  plugin: translatable_entity:migrate_entity_test
