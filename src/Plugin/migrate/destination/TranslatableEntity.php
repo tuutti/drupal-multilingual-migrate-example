@@ -23,6 +23,14 @@ class TranslatableEntity extends EntityContentBase {
   /**
    * {@inheritdoc}
    */
+  public function isTranslationDestination() : bool {
+    // Make sure we never set the langcode destination id mapping.
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function updateEntity(EntityInterface $entity, Row $row) {
     $entity = parent::updateEntity($entity, $row);
     // Always delete on rollback, even if it's "default" translation.
