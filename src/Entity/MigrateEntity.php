@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\user\EntityOwnerInterface;
 use Drupal\user\EntityOwnerTrait;
 
@@ -52,7 +53,7 @@ use Drupal\user\EntityOwnerTrait;
  *   },
  * )
  */
-final class MigrateEntity extends ContentEntityBase implements EntityPublishedInterface, EntityOwnerInterface {
+final class MigrateEntity extends ContentEntityBase implements EntityPublishedInterface, EntityOwnerInterface, TranslatableInterface {
 
   use EntityPublishedTrait;
   use EntityOwnerTrait;

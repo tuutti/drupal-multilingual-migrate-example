@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\multilingual_migrate_example\Plugin\migrate\destination;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\migrate\MigrateException;
+use Drupal\migrate\Plugin\migrate\destination\Entity;
 use Drupal\migrate\Plugin\migrate\destination\EntityContentBase;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Row;
@@ -24,8 +24,7 @@ class TranslatableEntity extends EntityContentBase {
    * {@inheritdoc}
    */
   public function isTranslationDestination() : bool {
-    // Make sure we never set the langcode destination id mapping.
-    return FALSE;
+    return TRUE;
   }
 
   /**
@@ -33,7 +32,7 @@ class TranslatableEntity extends EntityContentBase {
    */
   public function updateEntity(EntityInterface $entity, Row $row) : EntityInterface {
     $entity = parent::updateEntity($entity, $row);
-    // Always delete on rollback, even if it's "default" translation.
+    // Always delete on rollback, even if it's the default translation.
     $this->setRollbackAction($row->getIdMap(), MigrateIdMapInterface::ROLLBACK_DELETE);
 
     return $entity;
@@ -42,46 +41,11 @@ class TranslatableEntity extends EntityContentBase {
   /**
    * {@inheritdoc}
    */
-  protected function getEntity(Row $row, array $old_destination_id_values) : EntityInterface {
-    if (!$langcode = $row->getSourceProperty('language')) {
-      throw new MigrateException('Missing "language" source property.');
-    }
-
-    $entityId = reset($old_destination_id_values) ?: $this->getEntityId($row);
-
-    if (empty($entityId) || (!$entity = $this->storage->load($entityId))) {
-      // Attempt to ensure we always have a bundle.
-      if ($bundle = $this->getBundle($row)) {
-        $row->setDestinationProperty($this->getKey('bundle'), $bundle);
-      }
-      $row->setDestinationProperty($this->getKey('langcode'), $langcode);
-
-      // Stubs might need some required fields filled in.
-      if ($row->isStub()) {
-        $this->processStubRow($row);
-      }
-      $entity = $this->storage->create($row->getDestination());
-      $entity->enforceIsNew();
-    }
-
-    if ($entity->hasTranslation($langcode)) {
-      // Update existing translation.
-      return $this->updateEntity($entity->getTranslation($langcode), $row);
-    }
-    // Stubs might need some required fields filled in.
-    if ($row->isStub()) {
-      $this->processStubRow($row);
-    }
-    return $entity->addTranslation($langcode, $row->getDestination());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getIds() : array {
-    return [
-      $this->getKey('id') => ['type' => 'string'],
-    ];
+  public function rollback(array $destination_identifier) {
+    // We want to delete the entity and all the translations so use
+    // Entity:rollback because EntityContentBase::rollback will not remove the
+    // default translation.
+    Entity::rollback($destination_identifier);
   }
 
 }

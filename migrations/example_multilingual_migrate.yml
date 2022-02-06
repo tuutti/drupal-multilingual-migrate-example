@@ -8,5 +8,6 @@ source:
 process:
   id: id
   label: name
+  langcode: langcode
 destination:
   plugin: translatable_entity:migrate_entity_test

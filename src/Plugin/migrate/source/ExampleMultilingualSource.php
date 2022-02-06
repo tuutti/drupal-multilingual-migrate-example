@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace Drupal\multilingual_migrate_example\Plugin\migrate\source;
@@ -35,7 +34,7 @@ final class ExampleMultilingualSource extends SourcePluginBase {
   public function getIds() {
     return [
       'id' => ['type' => 'string'],
-      'language' => ['type' => 'string'],
+      'langcode' => ['type' => 'string'],
     ];
   }
 
@@ -43,10 +42,10 @@ final class ExampleMultilingualSource extends SourcePluginBase {
    * {@inheritdoc}
    */
   protected function initializeIterator() : \Generator {
-    yield ['id' => 1, 'language' => 'en', 'name' => 'test 1 en'];
-    yield ['id' => 1, 'language' => 'da', 'name' => 'test 1 da'];
-    yield ['id' => 2, 'language' => 'da', 'name' => 'test 2 da'];
-    yield ['id' => 2, 'language' => 'en', 'name' => 'test 2 en'];
+    yield ['id' => 1, 'langcode' => 'en', 'name' => 'test 1 en'];
+    yield ['id' => 1, 'langcode' => 'da', 'name' => 'test 1 da'];
+    yield ['id' => 2, 'langcode' => 'da', 'name' => 'test 2 da'];
+    yield ['id' => 2, 'langcode' => 'en', 'name' => 'test 2 en'];
   }
 
 }
